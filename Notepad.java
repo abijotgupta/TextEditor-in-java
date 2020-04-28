@@ -11,11 +11,18 @@ import javax.swing.JTextArea;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.PrintWriter;
 import java.awt.Color;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.Component;
 import javax.swing.ImageIcon;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JScrollBar;
 
 
 @SuppressWarnings("serial")
@@ -24,8 +31,9 @@ public class Notepad extends JFrame implements ActionListener {
 	private JPanel contentPane;
 	private JMenuBar menubar;
 	private JMenu file,edit;        //format,view,help;
-	private JMenuItem i1,i2,i3,i4,i5,i6,i7,i8,i9,i10;
+	private JMenuItem i1,i2,i3,i4,i5,i7,i8,i9,i10;
 	private JTextArea textArea;
+	private JScrollBar scrollBar;
 	
 
 	/**
@@ -50,7 +58,7 @@ public class Notepad extends JFrame implements ActionListener {
 	public Notepad() {
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(0, 0, 1540, 800);
+		setBounds(0, 0, 1540, 750);
 		contentPane = new JPanel();
 		contentPane.setAutoscrolls(true);
 		contentPane.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -58,7 +66,11 @@ public class Notepad extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		textArea = new JTextArea();
-		textArea.setBounds(0, 57, 1540, 743);
+		textArea.setLineWrap(true);
+		textArea.setAutoscrolls(false);
+		textArea.setFont(new Font("Monospaced", Font.PLAIN, 15));
+		textArea.setBorder(new LineBorder(new Color(0, 0, 0)));
+		textArea.setBounds(0, 57, 1511, 692);
 		contentPane.add(textArea);
 		
 		
@@ -79,21 +91,21 @@ public class Notepad extends JFrame implements ActionListener {
 		*/
 		
 		
-		i1 = new JMenuItem("New");
+		i1 = new JMenuItem("New             Ctrl+N");
 		i1.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		i2 = new JMenuItem("Open");
+		i2 = new JMenuItem("Open            Ctrl+O");
 		i2.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		i3 = new JMenuItem("Save");
+		i3 = new JMenuItem("Save            Ctrl+S");
 		i3.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		i4 = new JMenuItem("Save As");
+		i4 = new JMenuItem("Save As     Ctrl+Alt+S");
 		i4.setFont(new Font("Times New Roman", Font.PLAIN, 12));
 		i5 = new JMenuItem("Exit");
 		i5.setFont(new Font("Times New Roman", Font.PLAIN, 12));
 		
 		
-		i6 = new JMenuItem("Undo");
-		i6.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		i7 = new JMenuItem("Cut");
+		//i6 = new JMenuItem("Undo");
+		//i6.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		i7 = new JMenuItem("Cut              Ctrl+X");
 		i7.setFont(new Font("Times New Roman", Font.PLAIN, 12));
 		i8 = new JMenuItem("Copy            Ctrl+C");
 		i8.setFont(new Font("Times New Roman", Font.PLAIN, 12));
@@ -107,7 +119,7 @@ public class Notepad extends JFrame implements ActionListener {
 		i3.addActionListener(this);
 		i4.addActionListener(this);
 		i5.addActionListener(this);
-		i6.addActionListener(this);
+		//i6.addActionListener(this);
 		i7.addActionListener(this);
 		i8.addActionListener(this);
 		i9.addActionListener(this);
@@ -120,7 +132,7 @@ public class Notepad extends JFrame implements ActionListener {
 		file.add(i4);
 		file.add(i5);
 		
-		edit.add(i6);
+		//edit.add(i6);
 		edit.add(i7);
 		edit.add(i8);
 		edit.add(i9);
@@ -161,6 +173,14 @@ public class Notepad extends JFrame implements ActionListener {
 		close_btn.setAlignmentX(0.5f);
 		close_btn.setBounds(1503, 0, 37, 28);
 		panel.add(close_btn);
+		
+		scrollBar = new JScrollBar();
+		scrollBar.setAutoscrolls(true);
+		scrollBar.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		scrollBar.setFocusable(false);
+		scrollBar.setForeground(Color.LIGHT_GRAY);
+		scrollBar.setBounds(1510, 57, 20, 692);
+		contentPane.add(scrollBar);
 	
 		
 		
@@ -171,22 +191,92 @@ public class Notepad extends JFrame implements ActionListener {
 		
 		if(e.getSource() == i1)
 		{
-			textArea.setText("NEW FILE");
+			this.setTitle("New Document.txt");
+			textArea.setText("");
 		}
 		
 		if(e.getSource() == i2)
 		{
-			textArea.setText("OPEN");
+			
+			JFileChooser open = new JFileChooser();
+			
+			//FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG & GIF Images", "jpg", "gif");
+			    
+			//open.setFileFilter(filter);
+			int option = open.showOpenDialog(this);
+			
+		    if(option == JFileChooser.APPROVE_OPTION)
+		    {
+		    	this.textArea.setText("");
+		    	
+		    	try {
+		    			BufferedReader br = new BufferedReader(new FileReader(open.getSelectedFile().getPath()));
+		    			String line = br.readLine();
+		    		
+		    			while(line != null)
+		    			{
+		    				this.textArea.append(line + "\n");
+		    				line = br.readLine();		
+		    			} 	
+		    			
+		    			br.close();
+		    		}
+		    	
+		    	catch(Exception e1) {
+	    			System.out.println(e1.getMessage());
+	    			}
+		    	
+		    }
 		}
+		
+		
 		
 		if(e.getSource() == i3)
 		{
-			textArea.setText("SAVE");
+			JFileChooser save = new JFileChooser();
+			
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Text", ".txt");
+		    save.setFileFilter(filter);
+			
+			int option = save.showSaveDialog(this);
+			 if(option == JFileChooser.APPROVE_OPTION)
+			 {
+			    	this.textArea.setText("");
+			    	
+			    	try {
+			    			PrintWriter out = new PrintWriter(save.getSelectedFile().getPath());
+			    			out.write(this.textArea.getText());
+			    			out.close();
+			    		}
+			    	
+			    	catch(Exception e1) {
+		    			System.out.println(e1.getMessage());
+			    	}	
+			  }	
 		}
 		
 		if(e.getSource() == i4)
 		{
-			textArea.setText("SAVE AS");
+			JFileChooser save_as = new JFileChooser();
+			
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Text", ".txt");
+		    save_as.setFileFilter(filter);
+			
+			int option = save_as.showSaveDialog(this);
+			 if(option == JFileChooser.APPROVE_OPTION)
+			 {
+			    this.textArea.setText("");
+			    	
+			    try {
+			   			PrintWriter out = new PrintWriter(save_as.getSelectedFile().getPath());
+			   			out.write(this.textArea.getText());
+			   			out.close();
+			   		}
+		    	
+		    	catch(Exception e1) {
+	    			System.out.println(e1.getMessage());
+	    		   }	
+			  }	
 		}
 		
 		if(e.getSource() == i5)
@@ -194,10 +284,10 @@ public class Notepad extends JFrame implements ActionListener {
 			System.exit(0);
 		}
 		
-		if(e.getSource() == i6)
-		{
+		//if(e.getSource() == i6)
+		//{
 			//UNDO
-		}
+		//}
 		
 		if(e.getSource() == i7)
 		{

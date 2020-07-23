@@ -1,4 +1,4 @@
-package notepad;
+package texteditor;
 
 
 import java.awt.EventQueue;
@@ -26,7 +26,7 @@ import javax.swing.JScrollBar;
 
 
 @SuppressWarnings("serial")
-public class Notepad extends JFrame implements ActionListener {
+public class TextEditor extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JMenuBar menubar;
@@ -43,7 +43,7 @@ public class Notepad extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Notepad frame = new Notepad();
+					TextEditor frame = new TextEditor();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -55,7 +55,7 @@ public class Notepad extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Notepad() {
+	public TextEditor() {
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 1540, 750);

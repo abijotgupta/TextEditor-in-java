@@ -1,4 +1,4 @@
-package notepad;
+package texteditor;
 
 
 import java.awt.EventQueue;
